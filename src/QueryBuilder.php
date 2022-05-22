@@ -6,9 +6,9 @@
 
 namespace IvanDanylenko\Builder;
 
-use Aigletter\Contracts\Builder\SqlBuilderInterface;
+use Aigletter\Contracts\Builder\QueryBuilderInterface;
 
-class SqlBuilder implements SqlBuilderInterface
+class QueryBuilder implements QueryBuilderInterface
 {
     public $select;
     public $table;
@@ -17,13 +17,13 @@ class SqlBuilder implements SqlBuilderInterface
     public $limit = '';
     public $offset = '';
 
-    public function select($columns): SqlBuilder
+    public function select($columns): QueryBuilder
     {
         $this->select = implode(', ', $columns);
         return $this;
     }
 
-    public function where($conditions): SqlBuilder
+    public function where($conditions): QueryBuilder
     {
         $where = '';
         foreach ($conditions as $key => $value) {
@@ -34,25 +34,25 @@ class SqlBuilder implements SqlBuilderInterface
         return $this;
     }
 
-    public function table($table): SqlBuilder
+    public function table($table): QueryBuilder
     {
         $this->table = $table;
         return $this;
     }
 
-    public function limit($limit): SqlBuilder
+    public function limit($limit): QueryBuilder
     {
         $this->limit = $limit;
         return $this;
     }
 
-    public function offset($offset): SqlBuilder
+    public function offset($offset): QueryBuilder
     {
         $this->offset = $offset;
         return $this;
     }
 
-    public function order($order): SqlBuilder
+    public function order($order): QueryBuilder
     {
         $sort = '';
         foreach ($order as $key => $value) {
@@ -63,13 +63,8 @@ class SqlBuilder implements SqlBuilderInterface
         return $this;
     }
 
-    public function build(): string
+    public function build(): Query
     {
-        return "SELECT " . $this->select
-        . " FROM " . $this->table
-            . (!empty($this->where) ? " WHERE " . $this->where : '')
-            . (!empty($this->order) ? " ORDER BY " . $this->order : '')
-            . (!empty($this->limit) ? " LIMIT " . $this->limit : '')
-            . (!empty($this->offset) ? " OFFSET " . $this->offset : '');
+        return new Query($this);
     }
 }
