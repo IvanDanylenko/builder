@@ -13,4 +13,8 @@ $query = $builder->table('users')
     ->offset(40)
     ->build();
 $sql = (string) $query;
-echo $sql;
+
+$pdo = new PDO('mysql:host=localhost;dbname=test', 'root', 'root');
+$res = $pdo->query('SELECT * from user')->fetchAll();
+var_dump($res);
+exit();
